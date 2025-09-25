@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Open URLs in Tabs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            max-width: 600px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            font-size: 16px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Open Multiple URLs in Tabs</h2>
+    <p>Enter one URL per line:</p>
+
+    <textarea id="urlInput" placeholder="https://example.com"></textarea>
+    <br>
+    <button onclick="openUrls()">Open URLs</button>
+
+    <script>
+        function openUrls() {
+            const input = document.getElementById('urlInput').value;
+            const urls = input.split('\n').map(url => url.trim()).filter(url => url);
+
+            for (let url of urls) {
+                // Add protocol if missing
+                if (!/^https?:\/\//i.test(url)) {
+                    url = 'https://' + url;
+                }
+                window.open(url, '_blank');
+            }
+        }
+    </script>
+
+</body>
+
+</html>
