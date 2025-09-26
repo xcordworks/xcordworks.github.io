@@ -23,6 +23,7 @@
             font-size: 16px;
             cursor: pointer;
             float: right;
+            margin-right: 15px;
         }
     </style>
 </head>
@@ -34,9 +35,13 @@
 
     <textarea id="urlInput" placeholder="https://example.com"></textarea>
     <br>
+    <button onclick="goToAsin()">Goto ASINs</button>
     <button onclick="openUrls()">Open URLs</button>
 
     <script>
+        var urlData = [];
+        urlData['amazonUrl'] = 'https://www.amazon.com/dp/';
+
         function openUrls() {
             const input = document.getElementById('urlInput').value;
             const urls = input.split('\n').map(url => url.trim()).filter(url => url);
@@ -47,6 +52,16 @@
                     url = 'https://' + url;
                 }
                 window.open(url, '_blank');
+            }
+        }
+
+        function goToAsin() {
+            const input = document.getElementById('urlInput').value;
+            const urls = input.split('\n').map(url => url.trim()).filter(url => url);
+
+            for (let url of urls) {
+                let urlToOpen = urlData['amazonUrl'] + url;
+                window.open(urlToOpen, '_blank');
             }
         }
     </script>
