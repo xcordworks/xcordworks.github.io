@@ -17,13 +17,39 @@
             font-size: 16px;
         }
 
-        button {
-            margin-top: 15px;
-            padding: 10px 20px;
+        table {
+            border: 1px solid #000;
+            border-collapse: collapse;
+            float: left;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 8px;
+        }
+
+        .button {
+            background-color: green;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
             font-size: 16px;
             cursor: pointer;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            transform: scale(1.5);
+        }
+
+        .reset-button {
             float: right;
-            margin-right: 15px;
+            background-color:#00B4D8;
         }
     </style>
 </head>
@@ -31,16 +57,62 @@
 <body>
 
     <h2>Open Multiple URLs in Tabs</h2>
-    <p>Enter one URL per line:</p>
+    <p>
+        Enter one URL per line:
+    </p>
 
-    <textarea id="urlInput" placeholder="https://example.com"></textarea>
+    <textarea id="urlInput" placeholder="https://example.com" onpaste="handleUrlInputChange(this)"></textarea>
     <br>
-    <button onclick="goToAsin()">Goto ASINs</button>
-    <button onclick="openUrls()">Open URLs</button>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Auto Call on Paste</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <button onclick="goToAsin()" class="button">Goto ASINs</button>
+                </td>
+                <td>
+                    <input type="checkbox" id="automateASIN" class="checkbox" onchange="handleCheckboxChange(this)" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button onclick="openUrls()" class="button">Open URLs</button>
+                </td>
+                <td>
+                    <input type="checkbox" id="automateURL" class="checkbox" onchange="handleCheckboxChange(this)" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <button onclick="reset()" class="button reset-button">Reset</button>
 
     <script>
+
+        var automateASIN = false;
+        var automateURL = false;
         var urlData = [];
         urlData['amazonUrl'] = 'https://www.amazon.com/dp/';
+
+        function handleCheckboxChange(checkbox) {
+
+            if (checkbox.id === 'automateASIN') {
+                automateASIN = checkbox.checked;
+                automateURL = false;
+                document.getElementById('automateURL').checked = false;
+            } else if (checkbox.id === 'automateURL') {
+                automateURL = checkbox.checked;
+                automateASIN = false;
+                document.getElementById('automateASIN').checked = false;
+            }
+        }
 
         function openUrls() {
             const input = document.getElementById('urlInput').value;
@@ -64,6 +136,29 @@
                 window.open(urlToOpen, '_blank');
             }
         }
+
+        function handleUrlInputChange(el) {
+            setTimeout(handleAutomation, 13);
+        }
+
+        function handleAutomation() {
+            if (automateURL) {
+                openUrls();
+            }
+            if (automateASIN) {
+                goToAsin();
+            }
+        }
+
+        function reset() {
+            automateASIN = false;
+            automateURL = false;
+            document.getElementById('automateASIN').checked = false;
+            document.getElementById('automateURL').checked = false;
+            document.getElementById('urlInput').value = '';
+        }
+
+
     </script>
 
 </body>
