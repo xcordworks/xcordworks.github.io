@@ -75,6 +75,7 @@
             <tr>
                 <td>
                     <button onclick="goToAsin()" class="button">Goto ASINs</button>
+                    <button onclick="copyURL()" class="button">Copy URL</button>
                 </td>
                 <td>
                     <input type="checkbox" id="automateASIN" class="checkbox" onchange="handleCheckboxChange(this)" />
@@ -100,6 +101,17 @@
         var automateURL = false;
         var urlData = [];
         urlData['amazonUrl'] = 'https://www.amazon.com/dp/';
+
+        function copyURL() {
+            console.log('copyURLcopyURLcopyURLcopyURLcopyURL');
+            const input = document.getElementById('urlInput').value;
+            console.log(input);
+
+            let urlToOpen = urlData['amazonUrl'] + input;
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(urlToOpen);
+
+        }
 
         function handleCheckboxChange(checkbox) {
 
