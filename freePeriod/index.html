@@ -1,13 +1,297 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <title>Free Period</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <title>Anagram Quiz</title>
 
-    <body>
-        Free Period
-    </body>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background: #F6FFF8;
+            font-family: Poppins, sans-serif;
+            color: #2C3E50;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .quiz-container {
+            width: 420px;
+        }
+
+        .quiz-card {
+            background: conic-gradient(#4caf50 0deg, #ddd 0deg);
+            border-left: 8px solid maroon;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+            text-align: center;
+        }
+
+        .quiz-icon {
+            font-size: 55px;
+            color: #F1C40F;
+            margin-bottom: 10px;
+        }
+
+        .question {
+            font-size: 22px;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .anagram {
+            font-size: 42px;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        /* .option {
+            display: block;
+            width: 100%;
+            background: #3498DB;
+            color: white;
+            border: none;
+            padding: 14px;
+            margin: 10px 0;
+            font-size: 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transition: 0.2s;
+        }
+
+        .option:hover {
+            transform: scale(1.05);
+            background: #2980B9;
+        } */
+
+        /* .correct {
+            background: #2ECC71 !important;
+        }
+
+        .wrong {
+            background: #E74C3C !important;
+        } */
+
+        .next-btn,
+        .restartGame {
+            margin-top: 20px;
+            background: #F1C40F;
+            color: #2C3E50;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* .answer {
+            color: maroon;
+            font-family: cursive;
+        } */
+
+        .answer {
+            color: maroon;
+            font-family: cursive;
+
+            /* display: inline-block; */
+            display: block;
+            overflow: hidden;
+            white-space: nowrap;
+
+            border-right: 3px solid maroon;
+
+            width: 0;
+            opacity: 0;
+            /* hidden initially */
+        }
+
+        .answer.show {
+            opacity: 1;
+            animation:
+                typing 1.5s steps(var(--chars), end) forwards,
+                blink 0.7s step-end infinite;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        /* cursor blink */
+        @keyframes blink {
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        /* 👇 hide cursor after animation completes */
+        .answer.show.finished {
+            border-right: none;
+        }
+
+        .endOfGame {
+            display: none;
+        }
+
+        .endOfGameText {
+            font-size: 38px;
+            text-align: center;
+            color: maroon;
+            font-weight: bold;
+
+        }
+    </style>
+
+    <script src="questionBank.js"></script>
+</head>
+
+<body>
+
+    <div class="quiz-container">
+        <div class="quiz-card" id="quizCard">
+            <div id="game" class="game">
+                <div class="quiz-icon">🧠</div>
+                <div id="question" class="question"></div>
+                <div id="anagram" class="anagram"></div>
+                <div id="answer" class="anagram answer"></div>
+                <button id="nextBtn" class="next-btn">Next Question ➜</button>
+            </div>
+
+            <div id="endOfGame" class="endOfGame">
+                <div class="endOfGameText">--END of Game--</div>
+                <button id="restartGame" class="restartGame">Restart ➜</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        const questionEl = document.getElementById("question");
+        const anagramEl = document.getElementById("anagram");
+        const nextBtn = document.getElementById("nextBtn");
+        const restartGame = document.getElementById("restartGame");
+        const answerEl = document.getElementById("answer");
+        const gameElement = document.getElementById("game");
+        const endOfGameElement = document.getElementById("endOfGame");
+
+        var usedQuestions = [];
+
+        nextBtn.onclick = () => {
+
+            loadQuestion();
+
+        };
+
+        restartGame.onclick = () => {
+
+            usedQuestions = [];
+            gameElement.style.display = "block";
+            endOfGameElement.style.display = "none";
+
+            loadQuestion();
+        };
+
+        let questionBankLength = Object.keys(quiz).length;
+
+        function loadQuestion() {
+
+            resetAnswer();
+            // console.log(typeof quiz);
+            // console.log(Object.keys(quiz).length);
+            // console.log(usedQuestions.length);
+
+            let usedQuestionsLength = usedQuestions.length;
+
+            let qObj = getRandomQuestion(quiz, usedQuestions);
+
+            if (qObj) {
+
+                usedQuestions.push(qObj.key);
+
+                questionEl.innerText = qObj.data.question;
+                anagramEl.innerHTML = qObj.data.anagram;
+
+                startSlider(qObj.data.timer);
+                let timerInMilliSeconds = qObj.data.timer * 1000;
+                setTimeout(() => displayAnswer(qObj), timerInMilliSeconds);  // Set the time out to 7 seconds
+            } else if (
+                questionBankLength > 0 && usedQuestionsLength > 0
+                && questionBankLength == usedQuestionsLength
+            ) {
+                displayEndOfGame();
+            }
+        }
+
+        function displayEndOfGame() {
+            gameElement.style.display = "none";
+            endOfGameElement.style.display = "block";
+        }
+
+        function resetAnswer() {
+            answerEl.innerText = '';
+            answerEl.classList.remove("show");
+        }
+
+        function displayAnswer(qObj) {
+            answerEl.classList.remove("finished");
+            answerEl.innerText = qObj.data.answer;
+
+            // set dynamic steps
+            answerEl.style.setProperty("--chars", qObj.data.answer.length);
+
+            // reset state (important if reused)
+            answerEl.classList.remove("show");
+            void answerEl.offsetWidth; // force reflow (restart animation)
+
+            // trigger animation
+            answerEl.classList.add("show");
+
+
+            // mark animation finished
+            setTimeout(() => {
+                answerEl.classList.add("finished");
+            }, 1500); // match typing duration
+
+        }
+
+        function startSlider(seconds) {
+            const card = document.getElementById("quizCard");
+            const duration = seconds * 1000;
+            let start = null;
+
+            function animate(timestamp) {
+                if (!start) start = timestamp;
+                let progress = timestamp - start;
+                let percent = Math.min(progress / duration, 1);
+
+                let angle = percent * 360;
+
+                card.style.background = `conic-gradient(#4caf50 ${angle}deg, #ddd ${angle}deg)`;
+
+                if (percent < 1) {
+                    requestAnimationFrame(animate);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        loadQuestion();
+    </script>
+
+</body>
 
 </html>
