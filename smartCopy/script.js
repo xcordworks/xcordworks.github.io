@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('deleteAll').addEventListener('click', deleteAll);
     document.getElementById('deleteExceptToday').addEventListener('click', deleteExceptToday);
 
+    // document.getElementById('addDummy').addEventListener('click', injectInitialData);
+    // document.getElementById('printToConsole').addEventListener('click', printToConsole);
+
     document.getElementById('goTopBtn').addEventListener('click', () => {
         window.scrollTo({
             top: 0,
@@ -17,6 +20,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+function printToConsole() {
+    const entries = getAllClipboardEntries();
+    console.log('Alll entries');
+    console.table(entries, ["content", "tag"]);
+}
+
+function setupJson(tag, content, creationDateTime, uniqueKey) {
+    return {
+        tag: tag,
+        content: content,
+        creationDateTime: creationDateTime,
+        uniqueKey: uniqueKey
+    };
+}
 
 /* ================= INITIAL DATA ================= */
 function injectInitialData() {
@@ -30,11 +48,9 @@ function injectInitialData() {
     ];
 
     for (let i = 0; i < 10; i++) {
-        entries.push({
-            name: `Auto Tag ${i + 1}`,
-            content: `Auto generated content ${i + 1}`,
-            creationDateTime: new Date(dates[i % 4]).toISOString()
-        });
+
+        let entry = setupJson(`Auto Tag ${i + 1}`, `Auto generated content ${i + 1}`, new Date(dates[i % 4]).toISOString(), getUniqueKey());
+        entries.push(entry);
 
         localStorage.setItem('clipboardEntries', JSON.stringify(entries));
 
@@ -70,7 +86,7 @@ function loadClipboardEntries() {
     entries
         .filter(e =>
             e.content.toLowerCase().includes(search) ||
-            e.name.toLowerCase().includes(search)
+            e.tag.toLowerCase().includes(search)
         )
         .forEach((entry, index) => {
             const row = document.createElement('tr');
@@ -78,7 +94,7 @@ function loadClipboardEntries() {
             row.innerHTML = `
                 <td>${index + 1}</td>
                 <td><textarea class="content-edit">${entry.content}</textarea></td>
-                <td><input class="name-tag" value="${entry.name}"></td>
+                <td><input class="name-tag" value="${entry.tag}"></td>
                 <td>${formatDate(entry.creationDateTime)}</td>
                 <td>
                     <button class="copy-button"><i class="fas fa-copy"></i></button>
@@ -90,11 +106,11 @@ function loadClipboardEntries() {
 
             /* ✅ REAL-TIME SAVE */
             contentEl.addEventListener('input', (e) => {
-                updateEntry(index, 'content', e.target.value);
+                updateEntry(entry.uniqueKey, 'content', e.target.value);
             });
 
             row.querySelector('.name-tag').addEventListener('input', (e) => {
-                updateEntry(index, 'name', e.target.value);
+                updateEntry(entry.uniqueKey, 'tag', e.target.value);
             });
 
             /* ✅ COPY LATEST VALUE */
@@ -103,7 +119,7 @@ function loadClipboardEntries() {
             });
 
             row.querySelector('.delete-button').addEventListener('click', () => {
-                deleteEntry(index);
+                deleteEntry(entry.uniqueKey);
             });
 
             tbody.appendChild(row);
@@ -112,18 +128,29 @@ function loadClipboardEntries() {
 
 
 /* ================= UPDATE ================= */
-function updateEntry(index, field, value) {
+function updateEntry(uniqueKey, field, value) {
     const entries = getAllClipboardEntries();
-    entries[index][field] = value;
+    // entries[index][field] = value;
+    
+    
+    
+    let entry = entries.find(e => e.uniqueKey === uniqueKey);
+  
+    if (entry) {
+        entry[field] = value;
+    }
+    
     localStorage.setItem('clipboardEntries', JSON.stringify(entries));
 }
 
 /* ================= DELETE ================= */
-function deleteEntry(index) {
-    if (confirm("Are you sure?")) {
-        const entries = getAllClipboardEntries();
-        entries.splice(index, 1);
+function deleteEntry(uniqueKey) {
+    if (confirm("Are you sure? ---" + index)) {
+        let entries = getAllClipboardEntries();
+
+        entries = entries.filter(entry => entry.uniqueKey !== uniqueKey);
         localStorage.setItem('clipboardEntries', JSON.stringify(entries));
+
         loadClipboardEntries();
     }
 }
@@ -156,11 +183,9 @@ function pasteContent(event) {
     const content = (event.clipboardData || window.clipboardData).getData('text');
 
     if (content) {
-        saveClipboardEntry({
-            name: '-',
-            content,
-            creationDateTime: new Date().toISOString()
-        });
+        let entry = setupJson('-', content, new Date().toISOString(), getUniqueKey());
+
+        saveClipboardEntry(entry);
     }
 }
 
@@ -175,3 +200,7 @@ function getAllClipboardEntries() {
     return JSON.parse(localStorage.getItem('clipboardEntries')) || [];
 }
 
+function getUniqueKey() {
+    // const d = new Date();
+    return crypto.randomUUID();
+}

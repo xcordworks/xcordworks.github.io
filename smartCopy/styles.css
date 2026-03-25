@@ -24,7 +24,7 @@ textarea {
     width: 100%;
     padding: 10px;
     border-radius: 10px;
-    margin-bottom: 12px;
+    margin-top: 5px;
 }
 
 /* CONTROLS */
@@ -174,4 +174,29 @@ button:active {
 
 .end-divider::after {
   margin-left: 10px;
+}
+
+.col-no {
+  width: 50px;
+}
+
+.col-tag {
+  width: 160px;
+  white-space: nowrap;
+}
+
+.col-date {
+  width: 180px;
+  white-space: nowrap;
+}
+
+.col-actions {
+  width: 120px;
+  white-space: nowrap;
+}
+
+/* Content takes remaining space */
+.col-content {
+  width: auto;
+  word-wrap: break-word;
 }
