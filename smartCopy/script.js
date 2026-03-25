@@ -130,9 +130,6 @@ function loadClipboardEntries() {
 /* ================= UPDATE ================= */
 function updateEntry(uniqueKey, field, value) {
     const entries = getAllClipboardEntries();
-    // entries[index][field] = value;
-    
-    
     
     let entry = entries.find(e => e.uniqueKey === uniqueKey);
   
@@ -145,7 +142,7 @@ function updateEntry(uniqueKey, field, value) {
 
 /* ================= DELETE ================= */
 function deleteEntry(uniqueKey) {
-    if (confirm("Are you sure? ---" + index)) {
+    if (confirm("Are you sure?")) {
         let entries = getAllClipboardEntries();
 
         entries = entries.filter(entry => entry.uniqueKey !== uniqueKey);
