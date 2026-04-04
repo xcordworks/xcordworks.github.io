@@ -1,0 +1,91 @@
+body {
+    background: linear-gradient(135deg, #1d4350, #a43931);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Wider desktop */
+.app-card {
+    width: 100%;
+    max-width: 750px;
+    border-radius: 25px;
+    padding: 25px;
+    background: #fff;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 576px) {
+    .app-card {
+        max-width: 95%;
+    }
+}
+
+.form-control {
+    border-radius: 15px;
+    text-align: center;
+    font-size: 18px;
+    padding: 12px;
+}
+
+.symbol {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+/* Layout */
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+@media (max-width: 576px) {
+    .input-row {
+        flex-direction: column;
+    }
+
+    .symbol {
+        display: none;
+    }
+}
+
+/* Highlight */
+.result-highlight {
+    border: 2px solid #28a745 !important;
+    background: #eaffea !important;
+}
+
+/* History */
+.history {
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.history-item:hover {
+    background: #f5f5f5;
+}
+
+.delete-btn {
+    color: red;
+    cursor: pointer;
+}
+
+.computed {
+    color: #28a745;
+    font-weight: bold;
+    background: #eaffea;
+    padding: 2px 6px;
+    border-radius: 6px;
+}

@@ -1,11 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <title>Smart Percentage Calculator</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+   
 </head>
+
 <body>
-    <h1>Hello World</h1>
+
+    <div class="app-card">
+
+        <h4 class="text-center mb-3">
+            <i class="bi bi-calculator-fill"></i> Smart Percentage Calculator
+        </h4>
+
+        <!-- Inputs -->
+        <div class="input-row mb-3">
+
+            <input type="number" id="percent" class="form-control" placeholder="%">
+
+            <div class="symbol">%</div>
+
+            <input type="number" id="value" class="form-control" placeholder="Value">
+
+            <div class="symbol">=</div>
+
+            <input type="number" id="result" class="form-control" placeholder="Result">
+
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex gap-2 mb-3">
+            <button id="solve" class="btn btn-primary w-100">
+                <i class="bi bi-lightning-charge-fill"></i> Solve
+            </button>
+
+            <button id="reset" class="btn btn-secondary w-100">
+                <i class="bi bi-arrow-clockwise"></i> Reset
+            </button>
+        </div>
+
+        <!-- History Header -->
+        <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted">History</small>
+            <button id="clearHistory" class="btn btn-sm btn-danger">
+                <i class="bi bi-trash"></i> Clear All
+            </button>
+        </div>
+
+        <!-- History List -->
+        <div id="historyList" class="history mt-2"></div>
+
+    </div>
+
+    <script src="script.js"></script>
+
 </body>
+
 </html>
