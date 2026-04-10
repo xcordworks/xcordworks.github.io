@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // $('#copyToast').toast('hide');
+
     loadClipboardEntries();
 
     document.getElementById('clipboardInput').focus();
@@ -113,9 +115,35 @@ function loadClipboardEntries() {
                 updateEntry(entry.uniqueKey, 'tag', e.target.value);
             });
 
-            /* ✅ COPY LATEST VALUE */
-            row.querySelector('.copy-button').addEventListener('click', () => {
-                navigator.clipboard.writeText(contentEl.value);
+            row.querySelector('.copy-button').addEventListener('click', (e) => {
+                const button = e.currentTarget;
+                const icon = button.querySelector('i');
+                const toast = document.getElementById('copyToast');
+
+                navigator.clipboard.writeText(contentEl.value).then(() => {
+
+                    // 🟢 SHOW TOAST
+                    toast.classList.remove('show');
+                    void toast.offsetWidth; // force reflow
+                    toast.classList.add('show');
+
+                    // 🟢 AUTO HIDE AFTER 10s
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                    }, 5000);
+
+                    // 🟢 ICON CHANGE
+                    icon.classList.remove('fa-copy');
+                    icon.classList.add('fa-check');
+                    icon.style.color = 'green';
+
+                    // 🟢 RESET ICON AFTER 5s
+                    setTimeout(() => {
+                        icon.classList.remove('fa-check');
+                        icon.classList.add('fa-copy');
+                        icon.style.color = '';
+                    }, 5000);
+                });
             });
 
             row.querySelector('.delete-button').addEventListener('click', () => {
@@ -130,13 +158,13 @@ function loadClipboardEntries() {
 /* ================= UPDATE ================= */
 function updateEntry(uniqueKey, field, value) {
     const entries = getAllClipboardEntries();
-    
+
     let entry = entries.find(e => e.uniqueKey === uniqueKey);
-  
+
     if (entry) {
         entry[field] = value;
     }
-    
+
     localStorage.setItem('clipboardEntries', JSON.stringify(entries));
 }
 

@@ -1,0 +1,39 @@
+body {
+    background: #0f2027;
+    color: white;
+    padding: 20px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.grid-item {
+    background: #1c1c1c;
+    border-radius: 15px;
+    overflow: hidden;
+    height: 350px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    transition: 0.3s;
+}
+
+.grid-item:hover {
+    transform: scale(1.02);
+}
+
+.grid-title {
+    padding: 10px;
+    background: #222;
+    font-weight: bold;
+    text-align: center;
+}
+
+iframe {
+    width: 100%;
+    /* height: calc(100% - 40px); */
+    border: none;
+    background: white;
+    height: 100%;
+}
